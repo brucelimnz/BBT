@@ -1,0 +1,156 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4; /* Light grey background */
+    color: #333;
+    text-align: center;
+    padding: 20px; /* Add some padding around the edges */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+.container {
+    background-color: #fff; /* White background for the app container */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 400px; /* Limit the width for better readability on large screens */
+    width: 100%; /* Ensure it takes full width on smaller screens */
+}
+
+h1 {
+    color: #2c3e50; /* Darker blue-grey for title */
+    margin-bottom: 25px;
+    font-size: 1.8em; /* Slightly larger title */
+}
+
+.ball-display {
+    font-size: 3.5em; /* Large text for the ball count */
+    font-weight: bold;
+    color: #3498db; /* Blue color for the count */
+    margin-bottom: 40px;
+    padding: 15px 0;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    background-color: #eaf6fd; /* Lighter blue background for display */
+}
+
+#current-balls {
+    font-size: 1.2em; /* Ensure the number itself is slightly bigger */
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
+    gap: 15px; /* Space between buttons */
+    justify-content: center; /* Center buttons horizontally */
+}
+
+/* General styling for action buttons (Dot and Runs will use this) */
+.action-btn, .reset-btn {
+    padding: 20px 10px; /* Ample padding for easy tapping */
+    font-size: 1.3em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 140px; /* Minimum width for buttons */
+}
+
+/* Specific flex for Dot and Runs to make them two per row */
+#dot-btn, #runs-btn {
+    flex: 1 1 calc(50% - 15px);
+    background-color: #27ae60; /* Green for main actions */
+    color: white;
+}
+
+#dot-btn:hover, #runs-btn:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+#dot-btn:active, #runs-btn:active {
+    background-color: #229954;
+    transform: translateY(0); /* Press effect */
+}
+
+/* New wrapper to force Extras button onto its own centered line */
+.extras-button-row {
+    width: 100%; /* Takes full width to force button onto new line */
+    display: flex;
+    justify-content: center; /* Centers the button inside this row */
+    margin-top: 15px; /* Add space above Extras button */
+    margin-bottom: 15px; /* Add space below Extras button */
+}
+
+/* Styling for the "Extras" button itself, ensuring it's half width */
+.extras-button-row #extras-btn {
+    flex: 0 0 calc(50% - 15px); /* Explicitly set width to half, prevent growth */
+    background-color: #f39c12; /* Orange for special deliveries like extras */
+    color: white;
+}
+
+.extras-button-row #extras-btn:hover {
+    background-color: #f1c40f;
+    transform: translateY(-2px);
+}
+
+.extras-button-row #extras-btn:active {
+    background-color: #e67e22;
+    transform: translateY(0);
+}
+
+/* Styling for the "New Over" button */
+#new-over-btn {
+    background-color: #e74c3c; /* Red for reset action */
+    color: white;
+    flex: 1 1 100%; /* Make this button take full width */
+    /* Remove margin-top here as .extras-button-row handles it now */
+}
+
+#new-over-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+#new-over-btn:active {
+    background-color: #a53225;
+    transform: translateY(0);
+}
+
+/* Styling for when the over is complete - now blue with white text */
+.ball-display.over-complete {
+    background-color: #3498db; /* Blue background for over complete (like the active color) */
+    color: white; /* White text */
+    border-color: #2980b9; /* Slightly darker blue border */
+    animation: pulse 1s infinite alternate; /* Keep the pulsating animation */
+}
+
+/* Keyframes for the pulse animation */
+@keyframes pulse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.02);
+    }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+    #dot-btn, #runs-btn,
+    .extras-button-row #extras-btn { /* Also apply to extras button for small screens */
+        flex: 1 1 100%; /* Stack all buttons on very small screens */
+        font-size: 1.2em;
+        padding: 18px 10px;
+    }
+    /* Remove the margin on the extras-button-row for small screens if they stack */
+    .extras-button-row {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
