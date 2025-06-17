@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bruce's Ball Tracker</title>
-    <!-- CRITICAL CHANGE HERE: Ensure the stylesheet path is correct -->
-    <link rel="stylesheet" href="./style.css"> 
+    <link rel="stylesheet" href="./style.css">
+    <!-- Tone.js library for sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -13,7 +14,7 @@
         <div class="ball-display">
             <span id="current-balls">0</span>
         </div>
-        <!-- New Total Overs Display -->
+        <!-- Total Overs Display -->
         <div class="overs-display">
             Overs: <span id="total-overs">0</span>
         </div>
@@ -21,12 +22,14 @@
             <button id="dot-btn" class="action-btn">Dot</button>
             <button id="runs-btn" class="action-btn">Runs</button>
 
+            <!-- Wrapper for Extras and Undo buttons -->
             <div class="secondary-actions-row">
                 <button id="extras-btn" class="action-btn extras-btn">Extras</button>
                 <button id="undo-btn" class="utility-btn">Undo</button>
             </div>
+            
+            <!-- Removed the "New Over" button and its row -->
 
-            <button id="new-over-btn" class="reset-btn">New Over</button>
         </div>
     </div>
 

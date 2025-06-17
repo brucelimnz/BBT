@@ -5,130 +5,132 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background-color: #f4f4f4; /* Light grey background */
+    background-color: #eef2f5; /* Fresh, very light blue-grey background */
     color: #333;
     text-align: center;
-    padding: 20px; /* Add some padding around the edges */
-    box-sizing: border-box; /* Include padding in element's total width and height */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .container {
-    background-color: #fff; /* White background for the app container */
+    background-color: #ffffff; /* Pure white container */
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    max-width: 400px; /* Limit the width for better readability on large screens */
-    width: 100%; /* Ensure it takes full width on smaller screens */
+    max-width: 400px;
+    width: 100%;
 }
 
 h1 {
-    color: #2c3e50; /* Darker blue-grey for title */
+    color: #2c3e50; /* Dark blue-grey for title */
     margin-bottom: 25px;
-    font-size: 1.8em; /* Slightly larger title */
+    font-size: 1.8em;
 }
 
 .ball-display {
-    font-size: 3.5em; /* Large text for the ball count */
+    font-size: 3.5em;
     font-weight: bold;
-    color: #3498db; /* Blue color for the count */
+    color: #2980b9; /* Deeper, vibrant blue for count text */
     margin-bottom: 15px; /* Reduced margin to make space for overs display */
     padding: 15px 0;
-    border: 2px solid #3498db;
+    border: 2px solid #2980b9; /* Border matching new count color */
     border-radius: 8px;
-    background-color: #eaf6fd; /* Lighter blue background for display */
+    background-color: #dbe9f5; /* Muted light blue background for display */
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, animation 0.8s ease-in-out;
 }
 
 #current-balls {
-    font-size: 1.2em; /* Ensure the number itself is slightly bigger */
+    font-size: 1.2em;
 }
 
-/* New styling for the Total Overs display */
+/* Total Overs display styling */
 .overs-display {
     font-size: 1.5em;
     font-weight: bold;
-    color: #555; /* Dark grey for overs count */
-    margin-bottom: 40px; /* Space below overs display before buttons */
+    color: #667a89; /* Slightly muted dark grey for overs count */
+    margin-bottom: 40px;
 }
 
 .buttons {
     display: flex;
-    flex-wrap: wrap; /* Allow buttons to wrap to next line if needed */
-    gap: 15px; /* Space between rows of buttons (and between Dot/Runs) */
-    justify-content: center; /* Center buttons horizontally */
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: auto; /* Push buttons to the bottom if container has min-height */
 }
 
 /* Base styling for all interactable buttons */
-.action-btn, .reset-btn, .utility-btn {
-    padding: 20px 10px; /* Ample padding for easy tapping */
+.action-btn, .utility-btn { /* Removed .reset-btn here */
+    padding: 20px 10px;
     font-size: 1.3em;
     font-weight: bold;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease; /* Added opacity for disabled state */
-    min-width: 140px; /* Minimum width for buttons */
+    transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+    min-width: 140px;
 }
 
 /* Styling for disabled buttons */
 .action-btn:disabled, .utility-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    transform: none; /* No transform when disabled */
-    box-shadow: none; /* No shadow when disabled */
+    transform: none;
+    box-shadow: none;
 }
 
 /* Specific flex for Dot and Runs to make them two per row */
 #dot-btn, #runs-btn {
-    flex: 1 1 calc(50% - 7.5px); /* Adjusted flex for half width + gap */
-    background-color: #27ae60; /* Green for main actions */
+    flex: 1 1 calc(50% - 7.5px);
+    background-color: #005662; /* Dark Teal - Matches the BALL field */
     color: white;
 }
 
-#dot-btn:hover:not(:disabled), #runs-btn:hover:not(:disabled) { /* Only hover if not disabled */
-    background-color: #2ecc71;
-    transform: translateY(-2px); /* Slight lift on hover */
+#dot-btn:hover:not(:disabled), #runs-btn:hover:not(:disabled) {
+    background-color: #007983; /* Lighter Teal on hover */
+    transform: translateY(-2px);
 }
 
-#dot-btn:active:not(:disabled), #runs-btn:active:not(:disabled) { /* Only active if not disabled */
-    background-color: #229954;
-    transform: translateY(0); /* Press effect */
+#dot-btn:active:not(:disabled), #runs-btn:active:not(:disabled) {
+    background-color: #00404a; /* Darker Teal on active */
+    transform: translateY(0);
 }
 
-/* New wrapper to group Extras and Undo, and position them on their own row */
+/* Wrapper to group Extras and Undo, and position them on their own row */
 .secondary-actions-row {
-    width: 100%; /* Takes full width to force content onto new line */
+    width: 100%;
     display: flex;
-    justify-content: center; /* Centers items inside this row */
-    gap: 15px; /* Space between Extras and Undo buttons */
-    margin-top: 0px; /* No top margin here, gap in .buttons handles vertical spacing */
-    margin-bottom: 0px; /* No bottom margin here, gap in .buttons handles vertical spacing */
+    justify-content: center;
+    gap: 15px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
-/* Styling for Extras and Undo buttons (now sharing styling for consistent size) */
-.secondary-actions-row .action-btn, /* Targets Extras */
-.secondary-actions-row .utility-btn { /* Targets Undo */
-    flex: 1 1 calc(50% - 7.5px); /* Make them half width, similar to Dot/Runs */
+/* Styling for Extras and Undo buttons (consistent size) */
+.secondary-actions-row .action-btn,
+.secondary-actions-row .utility-btn {
+    flex: 1 1 calc(50% - 7.5px);
 }
 
 /* Specific background color for Extras */
 .extras-btn {
-    background-color: #f39c12; /* Orange for special deliveries like extras */
+    background-color: #005662; /* Dark Teal - Matches the BALL field */
     color: white;
 }
 
 .extras-btn:hover:not(:disabled) {
-    background-color: #f1c40f;
+    background-color: #007983;
     transform: translateY(-2px);
 }
 
 .extras-btn:active:not(:disabled) {
-    background-color: #e67e22;
+    background-color: #00404a;
     transform: translateY(0);
 }
 
 /* Specific background color for Undo */
 .utility-btn {
-    background-color: #6c757d; /* Grey for utility action */
+    background-color: #6c757d; /* Grey for utility action (remains unchanged) */
     color: white;
 }
 
@@ -142,29 +144,13 @@ h1 {
     transform: translateY(0);
 }
 
-/* Styling for the "New Over" button */
-#new-over-btn {
-    background-color: #e74c3c; /* Red for reset action */
-    color: white;
-    flex: 1 1 100%; /* Make this button take full width */
-    margin-top: 15px; /* Ensure vertical spacing from the row above */
-}
+/* Removed styling for #new-over-btn and .reset-button-row */
 
-#new-over-btn:hover:not(:disabled) {
-    background-color: #c0392b;
-    transform: translateY(-2px);
-}
-
-#new-over-btn:active:not(:disabled) {
-    background-color: #a53225;
-    transform: translateY(0);
-}
-
-/* Styling for when the over is complete - now blue with white text */
+/* Styling for when the over is complete - NOW GREEN with white text and pulsating */
 .ball-display.over-complete {
-    background-color: #3498db; /* Blue background for over complete (like the active color) */
+    background-color: #27ae60; /* Green background for over complete */
     color: white; /* White text */
-    border-color: #2980b9; /* Slightly darker blue border */
+    border-color: #229954; /* Darker green border */
     animation: pulse 1s infinite alternate; /* Keep the pulsating animation */
 }
 
@@ -181,24 +167,21 @@ h1 {
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
     #dot-btn, #runs-btn,
-    .secondary-actions-row .action-btn, /* Target Extras */
-    .secondary-actions-row .utility-btn, /* Target Undo */
-    #new-over-btn {
+    .secondary-actions-row .action-btn,
+    .secondary-actions-row .utility-btn { /* Removed #new-over-btn */
         flex: 1 1 100%; /* Stack all buttons on very small screens */
         font-size: 1.2em;
         padding: 18px 10px;
     }
     /* Adjustments for nested flex container on small screens */
     .secondary-actions-row {
-        flex-direction: column; /* Stack extras and undo vertically */
-        gap: 0; /* No horizontal gap when stacked */
-        margin-top: 15px; /* Add margin above Extras when stacked */
+        flex-direction: column;
+        gap: 0;
+        margin-top: 15px;
     }
     .secondary-actions-row .action-btn,
     .secondary-actions-row .utility-btn {
-        margin-bottom: 15px; /* Add vertical space between stacked buttons */
+        margin-bottom: 15px;
     }
-    #new-over-btn {
-        margin-top: 0; /* Remove top margin from New Over as last button in row has margin-bottom */
-    }
+    /* #new-over-btn margin removed */
 }
