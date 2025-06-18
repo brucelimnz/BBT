@@ -18,7 +18,7 @@
         <div class="history-tracker" id="history-tracker"></div>
 
         <div class="overs-display">
-            Overs: <span id="total-overs">0</span>
+            Overs: <span id="total-overs">0.0</span>
         </div>
         <div class="buttons">
             <button id="dot-btn" class="action-btn">Dot</button>
@@ -31,6 +31,9 @@
             
         </div>
     </div>
+
+    <!-- NEW: Element for temporary run/wicket feedback -->
+    <div id="feedback-display" class="feedback-display"></div>
 
     <div class="modal-overlay" id="runs-overlay"></div>
 
@@ -54,8 +57,8 @@
         <div class="extra-options-grid">
             <button class="extra-option-btn" data-extra-type="Wide">Wide</button>
             <button class="extra-option-btn" data-extra-type="No Ball">No Ball</button>
-            <button class="extra-option-btn" data-extra-type="Byes">Byes</button> <!-- SWAPPED POSITION -->
-            <button class="extra-option-btn" data-extra-type="Wicket">Wicket</button> <!-- SWAPPED POSITION -->
+            <button class="extra-option-btn" data-extra-type="Byes">Byes</button> 
+            <button class="extra-option-btn" data-extra-type="Wicket">Wicket</button> 
         </div>
         <button class="modal-cancel-btn" id="cancel-extra-selection-btn">Cancel</button>
     </div>

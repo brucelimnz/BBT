@@ -158,6 +158,44 @@ h1 {
     }
 }
 
+/* NEW: Styles for the feedback display */
+.feedback-display {
+    position: fixed; /* Keep fixed to overlay everything */
+    top: 35%; /* ADJUSTED: Move higher to visually align with main interface */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center it precisely based on its own dimensions */
+    font-size: 5em; /* Large text */
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9); /* White, slightly transparent */
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly darker background for better contrast */
+    padding: 30px 40px;
+    border-radius: 15px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 2000; /* Ensure it's above modals */
+    opacity: 0; /* Initially hidden */
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease; /* Smooth transition */
+    pointer-events: none; /* Allows clicks to pass through when hidden */
+}
+
+.feedback-display.active {
+    opacity: 1; /* Fade in */
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1); /* Ensure it scales properly from center */
+}
+
+.feedback-display.active.runs {
+    color: #4CAF50; /* Green for runs */
+    /* background-color remains the same as default feedback-display.active */
+}
+
+.feedback-display.active.wicket {
+    color: #F44336; /* Red for wickets */
+    /* background-color remains the same as default feedback-display.active */
+}
+
+
+/* MODAL STYLES (Applies to both Runs and Extras modals) */
 .modal-overlay {
     position: fixed;
     top: 0;
