@@ -100,19 +100,19 @@ h1 {
     box-shadow: none;
 }
 
-/* Action Buttons (Dot, Runs, Extras) - Orange color */
+/* Action Buttons (Dot, Runs, Extras) - Reverted to Original Color */
 #dot-btn, #runs-btn, .extras-btn { /* Combined for consistent color */
-    background-color: #FF8C00; /* Dark Orange */
+    background-color: #005662; /* Original: dark teal/cyan */
     color: white;
 }
 
 #dot-btn:hover:not(:disabled), #runs-btn:hover:not(:disabled), .extras-btn:hover:not(:disabled) {
-    background-color: #FFA700; /* Slightly lighter orange on hover */
+    background-color: #007983; /* Original hover: slightly lighter */
     transform: translateY(-2px);
 }
 
 #dot-btn:active:not(:disabled), #runs-btn:active:not(:disabled), .extras-btn:active:not(:disabled) {
-    background-color: #E67A00; /* Slightly darker orange on active */
+    background-color: #00404a; /* Original active: slightly darker */
     transform: translateY(0);
 }
 
@@ -277,17 +277,15 @@ h1 {
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
-    /* Ensure the main .buttons container takes full width within the .container's padding */
     .buttons {
-        flex-direction: column; /* Stack buttons vertically */
+        flex-direction: column; /* Force all main button groups to stack */
         width: 100%; /* Occupy full width of its parent (.container's content area) */
-        gap: 15px; /* Maintain consistent vertical gap between all major button elements */
-        /* Removed flex-wrap: wrap; for cleaner column stacking */
+        gap: 15px; /* Uniform vertical gap between all major button elements */
     }
 
-    /* Target all action and utility buttons directly to ensure full width stacking */
+    /* Target all action and utility buttons directly to ensure full width, centered stacking */
     .action-btn, .utility-btn {
-        width: 100%; /* Force full width on mobile to match the container */
+        width: 100%; /* Force full width on mobile to match the container's content area */
         flex: none; /* Remove any flex-basis that might conflict with width: 100% */
         margin: 0; /* Remove any individual margins, rely on parent gap */
         font-size: 1.2em;
