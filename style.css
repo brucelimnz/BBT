@@ -18,7 +18,7 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
     max-width: 400px;
-    width: 100%;
+    width: 100%; /* Ensure container takes full available width up to max-width */
     position: relative;
     z-index: 1;
     margin-top: 0; /* Ensure no extra top margin is pushing it down */
@@ -54,7 +54,7 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
-    width: calc(100% - 20px);
+    width: calc(100% - 20px); /* Adjust for 10px padding on left/right of container */
     text-align: center;
     overflow-x: auto;
     white-space: nowrap;
@@ -89,7 +89,7 @@ h1 {
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
     min-width: 140px; /* Minimum width for readability on smaller screens */
-    flex: 1 1 calc(50% - 7.5px); /* NEW: Common flex for desktop sizing */
+    flex: 1 1 calc(50% - 7.5px); /* Common flex for desktop sizing */
     max-width: calc(50% - 7.5px); /* Ensure they don't grow beyond half width */
 }
 
@@ -277,18 +277,23 @@ h1 {
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
+    /* Ensure the main .buttons container takes full width within the .container's padding */
     .buttons {
-        flex-direction: column; /* Force all main button groups to stack */
-        gap: 15px; /* Uniform vertical gap between all major button elements */
+        flex-direction: column; /* Stack buttons vertically */
+        width: 100%; /* Occupy full width of its parent (.container's content area) */
+        gap: 15px; /* Maintain consistent vertical gap between all major button elements */
+        /* Removed flex-wrap: wrap; for cleaner column stacking */
     }
 
     /* Target all action and utility buttons directly to ensure full width stacking */
     .action-btn, .utility-btn {
-        width: 100%; /* Force full width on mobile */
+        width: 100%; /* Force full width on mobile to match the container */
         flex: none; /* Remove any flex-basis that might conflict with width: 100% */
         margin: 0; /* Remove any individual margins, rely on parent gap */
         font-size: 1.2em;
         padding: 18px 10px;
+        min-width: unset; /* Remove min-width to allow full responsiveness */
+        max-width: unset; /* Remove max-width to allow full responsiveness */
     }
 
     /* The secondary-actions-row needs to also stack its children */
@@ -299,7 +304,6 @@ h1 {
         margin-top: 0; /* Crucial: Remove this margin to let the .buttons gap handle spacing */
         margin-bottom: 0;
     }
-
 
     /* Modal adjustments for smaller screens (unchanged) */
     .runs-selection-modal,
