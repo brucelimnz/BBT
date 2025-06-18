@@ -39,7 +39,7 @@ let overAnimationTimeout;
 let autoResetTimeout;
 
 // Flag to ensure Tone.js audio context is started only once
-let audioInitialized = false; // Kept for robust audio initialization
+let audioInitialized = false;
 
 
 // --- Tone.js Sound Setup ---
@@ -290,11 +290,15 @@ extraOptionButtons.forEach(button => {
 
         stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] });
 
-        // Changed 'Wd' to 'WD' for Wide and 'B' to 'BY' for Byes
-        if (extraType === "Wide") overEvents.push('WD'); // CHANGED
+        if (extraType === "Wicket" || extraType === "Byes") {
+            if (currentBalls < MAX_BALLS_PER_OVER) {
+                currentBalls++;
+            }
+        }
+        if (extraType === "Wide") overEvents.push('WD');
         else if (extraType === "No Ball") overEvents.push('NB');
         else if (extraType === "Wicket") overEvents.push('X');
-        else if (extraType === "Byes") overEvents.push('BY'); // CHANGED
+        else if (extraType === "Byes") overEvents.push('BY');
         
         extrasSelectionModal.classList.remove('active');
         extrasOverlay.classList.remove('active');
