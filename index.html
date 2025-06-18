@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- Removed: <h1>Bruce's Ball Tracker</h1> -->
+        <!-- Main content elements -->
         <div class="ball-display">
             <span id="current-balls">0</span>
         </div>
@@ -30,9 +30,16 @@
             </div>
             
         </div>
-    </div>
 
-    <!-- REMOVED: <div id="feedback-display" class="feedback-display"></div> -->
+        <!-- Theme Toggle Switch is correctly positioned at the end of the container -->
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+            <em class="toggle-label">Dark Mode</em>
+        </div>
+    </div>
 
     <div class="modal-overlay" id="runs-overlay"></div>
 

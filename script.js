@@ -7,7 +7,10 @@ const runsBtn = document.getElementById('runs-btn');
 const extrasBtn = document.getElementById('extras-btn');
 const undoBtn = document.getElementById('undo-btn');
 const ballDisplayContainer = document.querySelector('.ball-display');
-// REMOVED: const feedbackDisplay = document.getElementById('feedback-display');
+
+// Theme toggle elements
+const themeToggle = document.getElementById('checkbox');
+const body = document.body;
 
 // Runs selection modal elements
 const runsSelectionModal = document.getElementById('runs-selection-modal');
@@ -38,7 +41,6 @@ let stateHistory = [];
 // Variables to hold timeout IDs for 'OVER' animation/sound and automatic reset
 let overAnimationTimeout;
 let autoResetTimeout;
-// REMOVED: let feedbackHideTimeout;
 
 // Flag to ensure Tone.js audio context is started only once
 let audioInitialized = false;
@@ -140,28 +142,6 @@ function playSound(type) {
     }
 }
 
-// REMOVED: Function to show temporary feedback
-/*
-function showFeedback(message, type) {
-    clearTimeout(feedbackHideTimeout); // Clear any existing hide timeout
-
-    feedbackDisplay.textContent = message;
-    feedbackDisplay.classList.remove('runs', 'wicket'); // Remove previous types
-    feedbackDisplay.classList.add('active'); // Show it
-
-    if (type === 'runs') {
-        feedbackDisplay.classList.add('runs');
-    } else if (type === 'wicket') {
-        feedbackDisplay.classList.add('wicket');
-    }
-
-    // Hide after 1.5 seconds
-    feedbackHideTimeout = setTimeout(() => {
-        feedbackDisplay.classList.remove('active');
-    }, 1500);
-}
-*/
-
 
 // --- Function to perform the automatic reset ---
 function performAutoReset() {
@@ -259,7 +239,6 @@ dotBtn.addEventListener('click', async () => {
         updateDisplay();
         triggerHapticFeedback(50);
         playSound('click');
-        // REMOVED: showFeedback('0 Runs', 'runs');
     }
 });
 
@@ -290,7 +269,6 @@ runButtons.forEach(button => {
         
         triggerHapticFeedback(50);
         playSound('click');
-        // REMOVED: showFeedback(`+${runsScored} runs`, 'runs');
     });
 });
 
@@ -319,31 +297,20 @@ extraOptionButtons.forEach(button => {
 
         stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] });
 
-        // REMOVED: let feedbackText = '';
-        // REMOVED: let feedbackType = 'runs';
-
         if (extraType === "Wicket") {
             if (currentBalls < MAX_BALLS_PER_OVER) {
                 currentBalls++;
             }
             overEvents.push('X');
-            // REMOVED: feedbackText = 'WICKET!';
-            // REMOVED: feedbackType = 'wicket';
         } else if (extraType === "Byes") {
             if (currentBalls < MAX_BALLS_PER_OVER) {
                 currentBalls++;
             }
             overEvents.push('BY');
-            // REMOVED: feedbackText = 'Byes';
-            // REMOVED: feedbackType = 'runs';
         } else if (extraType === "Wide") {
             overEvents.push('WD');
-            // REMOVED: feedbackText = 'Wide Ball';
-            // REMOVED: feedbackType = 'runs';
         } else if (extraType === "No Ball") {
             overEvents.push('NB');
-            // REMOVED: feedbackText = 'No Ball';
-            // REMOVED: feedbackType = 'runs';
         }
         
         extrasSelectionModal.classList.remove('active');
@@ -352,7 +319,6 @@ extraOptionButtons.forEach(button => {
 
         triggerHapticFeedback(50);
         playSound('click');
-        // REMOVED: showFeedback(feedbackText, feedbackType);
     });
 });
 
@@ -369,8 +335,6 @@ undoBtn.addEventListener('click', async () => {
     clearTimeout(autoResetTimeout);
     clearTimeout(overAnimationTimeout);
     ballDisplayContainer.classList.remove('over-complete');
-    // REMOVED: clearTimeout(feedbackHideTimeout);
-    // REMOVED: feedbackDisplay.classList.remove('active', 'runs', 'wicket');
 
     if (stateHistory.length > 0) {
         const prevState = stateHistory.pop();
@@ -387,6 +351,43 @@ undoBtn.addEventListener('click', async () => {
         playSound('undoPop');
     }
 });
+
+// --- Theme Toggle Logic ---
+// Function to set the theme
+function setTheme(theme) {
+    if (theme === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.checked = true;
+    } else {
+        body.classList.remove('dark-mode');
+        themeToggle.checked = false;
+    }
+    localStorage.setItem('theme', theme); // Save preference
+}
+
+// Load saved theme preference on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // Check for OS dark mode preference if no theme saved
+        setTheme('dark');
+    } else {
+        setTheme('light'); // Default to light mode
+    }
+});
+
+// Listen for theme toggle changes
+themeToggle.addEventListener('change', () => {
+    if (themeToggle.checked) {
+        setTheme('dark');
+    } else {
+        setTheme('light');
+    }
+});
+// --- END Theme Toggle Logic ---
+
 
 // --- Initial Setup ---
 updateDisplay();

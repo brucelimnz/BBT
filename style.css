@@ -1,31 +1,120 @@
+:root {
+    /* Light Mode Colors */
+    --bg-color-body: #eef2f5;
+    --text-color-primary: #333;
+    --container-bg: #ffffff;
+    --ball-display-bg: #dbe9f5;
+    --ball-display-border: #2980b9;
+    --ball-display-text: #2980b9;
+    --history-tracker-bg: #f9f9f9;
+    --history-tracker-border: #ddd;
+    --history-tracker-text: #555;
+    --overs-display-text: #667a89;
+    --action-btn-bg: #005662;
+    --action-btn-hover-bg: #007983;
+    --action-btn-active-bg: #00404a;
+    --utility-btn-bg: #6c757d;
+    --utility-btn-hover-bg: #5a6268;
+    --utility-btn-active-bg: #495057;
+    --modal-h2-color: #2c3e50;
+    --modal-btn-bg: #e0e0e0;
+    --modal-btn-hover-bg: #d0d0d0;
+    --modal-btn-active-bg: #c0c0c0;
+    --modal-btn-text: #333;
+    --modal-cancel-btn-bg: #dc3545;
+    --modal-cancel-btn-hover-bg: #c82333;
+    --modal-cancel-btn-active-bg: #bd2130;
+
+    /* Theme switch colors */
+    --switch-bg-off: #ccc;
+    --switch-bg-on: #66bb6a;
+    --switch-slider-color: white;
+    --switch-label-color: #555;
+}
+
+body.dark-mode {
+    /* Dark Mode Colors */
+    --bg-color-body: #2c3e50; /* Darker blue-grey */
+    --text-color-primary: #ecf0f1; /* Light grey */
+    --container-bg: #34495e; /* Slightly lighter dark blue-grey */
+    --ball-display-bg: #4a657c; /* Darker blue */
+    --ball-display-border: #80ced6; /* Lighter border */
+    --ball-display-text: #e0f2f7; /* Very light blue */
+    --history-tracker-bg: #3b5062;
+    --history-tracker-border: #4d687b;
+    --history-tracker-text: #bdc3c7;
+    --overs-display-text: #aeb6bf;
+    --action-btn-bg: #2ecc71; /* Green */
+    --action-btn-hover-bg: #27ae60;
+    --action-btn-active-bg: #219d53;
+    --utility-btn-bg: #95a5a6; /* Lighter grey */
+    --utility-btn-hover-bg: #7f8c8d;
+    --utility-btn-active-bg: #6c7a7d;
+    --modal-h2-color: #ecf0f1;
+    --modal-btn-bg: #5a7080;
+    --modal-btn-hover-bg: #6b8296;
+    --modal-btn-active-bg: #4d6170;
+    --modal-btn-text: #ecf0f1;
+    --modal-cancel-btn-bg: #e74c3c;
+    --modal-cancel-btn-hover-bg: #c0392b;
+    --modal-cancel-btn-active-bg: #a13123;
+
+    /* Theme switch colors - adjusted for dark mode */
+    --switch-bg-off: #5a6a7c;
+    --switch-bg-on: #3498db;
+    --switch-slider-color: white;
+    --switch-label-color: #bdc3c7;
+}
+
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Aligns content to the top of the flex container */
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* CHANGED: Align to the top vertically */
     min-height: 100vh;
     margin: 0;
-    background-color: #eef2f5;
-    color: #333;
+    background-color: var(--bg-color-body);
+    color: var(--text-color-primary);
     text-align: center;
-    padding: 20px 10px 10px; /* Adjusted padding: 20px top, 10px sides, 10px bottom */
+    padding: 20px 10px; /* Consistent padding around the content */
     box-sizing: border-box;
 }
 
 .container {
-    background-color: #ffffff;
+    background-color: var(--container-bg);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
     max-width: 400px;
-    width: 100%; /* Ensure container takes full available width up to max-width */
+    width: 100%;
     position: relative;
     z-index: 1;
-    margin-top: 0; /* Ensure no extra top margin is pushing it down */
+    /* Removed margin-top: 0; as align-items: center on body will handle vertical position */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Consistent spacing between all direct children */
+    min-height: 500px; /* Added a minimum height to prevent squishing on small screens */
+    box-sizing: border-box; /* Ensures padding is included in height calculation */
 }
 
+/* Specific elements inside container - No individual margins, handled by container gap */
+.ball-display,
+.history-tracker,
+.overs-display {
+    flex-shrink: 0;
+    margin-bottom: 0; /* Ensure no extra margin */
+}
+
+.buttons {
+    flex-shrink: 0;
+    margin-top: auto; /* Pushes the button group to occupy remaining space */
+    margin-bottom: 0; /* Ensure no extra margin */
+}
+
+
 h1 {
-    color: #2c3e50;
+    color: var(--modal-h2-color);
     margin-bottom: 25px;
     font-size: 1.8em;
 }
@@ -33,12 +122,11 @@ h1 {
 .ball-display {
     font-size: 3.5em;
     font-weight: bold;
-    color: #2980b9;
-    margin-bottom: 10px;
+    color: var(--ball-display-text);
     padding: 15px 0;
-    border: 2px solid #2980b9;
+    border: 2px solid var(--ball-display-border);
     border-radius: 8px;
-    background-color: #dbe9f5;
+    background-color: var(--ball-display-bg);
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, animation 0.8s ease-in-out;
 }
 
@@ -48,13 +136,12 @@ h1 {
 
 .history-tracker {
     font-size: 1.1em;
-    color: #555;
-    margin-bottom: 15px;
+    color: var(--history-tracker-text);
     padding: 8px 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--history-tracker-border);
     border-radius: 5px;
-    background-color: #f9f9f9;
-    width: calc(100% - 20px); /* Adjust for 10px padding on left/right of container */
+    background-color: var(--history-tracker-bg);
+    width: calc(100% - 20px);
     text-align: center;
     overflow-x: auto;
     white-space: nowrap;
@@ -68,16 +155,15 @@ h1 {
 .overs-display {
     font-size: 1.2em;
     font-weight: bold;
-    color: #667a89;
-    margin-bottom: 20px;
+    color: var(--overs-display-text);
 }
 
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px; /* Consistent gap for desktop view */
+    gap: 15px;
     justify-content: center;
-    margin-top: auto;
+    /* margin-top: auto already defined above */
 }
 
 .action-btn, .utility-btn {
@@ -88,9 +174,9 @@ h1 {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
-    min-width: 140px; /* Minimum width for readability on smaller screens */
-    flex: 1 1 calc(50% - 7.5px); /* Common flex for desktop sizing */
-    max-width: calc(50% - 7.5px); /* Ensure they don't grow beyond half width */
+    min-width: 140px;
+    flex: 1 1 calc(50% - 7.5px);
+    max-width: calc(50% - 7.5px);
 }
 
 .action-btn:disabled, .utility-btn:disabled {
@@ -100,45 +186,43 @@ h1 {
     box-shadow: none;
 }
 
-/* Action Buttons (Dot, Runs, Extras) - Reverted to Original Color */
-#dot-btn, #runs-btn, .extras-btn { /* Combined for consistent color */
-    background-color: #005662; /* Original: dark teal/cyan */
+#dot-btn, #runs-btn, .extras-btn {
+    background-color: var(--action-btn-bg);
     color: white;
 }
 
 #dot-btn:hover:not(:disabled), #runs-btn:hover:not(:disabled), .extras-btn:hover:not(:disabled) {
-    background-color: #007983; /* Original hover: slightly lighter */
+    background-color: var(--action-btn-hover-bg);
     transform: translateY(-2px);
 }
 
 #dot-btn:active:not(:disabled), #runs-btn:active:not(:disabled), .extras-btn:active:not(:disabled) {
-    background-color: #00404a; /* Original active: slightly darker */
+    background-color: var(--action-btn-active-bg);
     transform: translateY(0);
 }
 
 
 .secondary-actions-row {
-    width: 100%; /* Ensures this row takes full width, so buttons below stack correctly */
+    width: 100%;
     display: flex;
     justify-content: center;
-    gap: 15px; /* Consistent gap for its children on desktop */
-    margin-top: 15px; /* Space between Runs button and this row on desktop */
+    gap: 15px;
+    margin-top: 15px;
     margin-bottom: 0px;
 }
 
-/* Undo button (utility-btn) remains grey (its color is defined below, overriding the orange) */
 .utility-btn {
-    background-color: #6c757d;
+    background-color: var(--utility-btn-bg);
     color: white;
 }
 
 .utility-btn:hover:not(:disabled) {
-    background-color: #5a6268;
+    background-color: var(--utility-btn-hover-bg);
     transform: translateY(-2px);
 }
 
 .utility-btn:active:not(:disabled) {
-    background-color: #495057;
+    background-color: var(--utility-btn-active-bg);
     transform: translateY(0);
 }
 
@@ -158,44 +242,87 @@ h1 {
     }
 }
 
-/* REMOVED: Styles for the feedback display */
-/*
-.feedback-display {
-    position: fixed;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5em;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.9);
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 30px 40px;
-    border-radius: 15px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    z-index: 2000;
+/* Theme Toggle Switch Styles - Positioned at bottom center of container */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center horizontally */
+    margin-top: 20px; /* Space from preceding element within container */
+    width: 100%; /* Ensure it takes full width to allow centering */
+    flex-shrink: 0;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.theme-switch input {
     opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease;
-    pointer-events: none;
+    width: 0;
+    height: 0;
 }
 
-.feedback-display.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--switch-bg-off);
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 
-.feedback-display.active.runs {
-    color: #4CAF50;
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--switch-slider-color);
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 
-.feedback-display.active.wicket {
-    color: #F44336;
+input:checked + .slider {
+    background-color: var(--switch-bg-on);
 }
-*/
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--switch-bg-on);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.toggle-label {
+    font-size: 0.9em;
+    color: var(--switch-label-color);
+    font-weight: normal;
+    margin-left: 10px;
+}
 
 
-/* MODAL STYLES (Applies to both Runs and Extras modals) */
+/* MODAL STYLES (Applies to both Runs and Extras modals) - Use CSS variables */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -219,7 +346,7 @@ h1 {
 
 .runs-selection-modal,
 .extras-selection-modal {
-    background-color: #ffffff;
+    background-color: var(--container-bg);
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     padding: 30px;
@@ -247,7 +374,7 @@ h1 {
 .extras-selection-modal h2 {
     margin-top: 0;
     margin-bottom: 25px;
-    color: #2c3e50;
+    color: var(--modal-h2-color);
     font-size: 1.6em;
 }
 
@@ -272,21 +399,21 @@ h1 {
     font-weight: bold;
     border: none;
     border-radius: 8px;
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: var(--modal-btn-bg);
+    color: var(--modal-btn-text);
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .run-option-btn:hover,
 .extra-option-btn:hover {
-    background-color: #d0d0d0;
+    background-color: var(--modal-btn-hover-bg);
     transform: translateY(-2px);
 }
 
 .run-option-btn:active,
 .extra-option-btn:active {
-    background-color: #c0c0c0;
+    background-color: var(--modal-btn-active-bg);
     transform: translateY(0);
 }
 
@@ -296,19 +423,19 @@ h1 {
     font-weight: bold;
     border: none;
     border-radius: 8px;
-    background-color: #dc3545;
+    background-color: var(--modal-cancel-btn-bg);
     color: white;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .modal-cancel-btn:hover {
-    background-color: #c82333;
+    background-color: var(--modal-cancel-btn-hover-bg);
     transform: translateY(-2px);
 }
 
 .modal-cancel-btn:active {
-    background-color: #bd2130;
+    background-color: var(--modal-cancel-btn-active-bg);
     transform: translateY(0);
 }
 
@@ -316,32 +443,35 @@ h1 {
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
     .buttons {
-        flex-direction: column; /* Force all main button groups to stack */
-        width: 100%; /* Occupy full width of its parent (.container's content area) */
-        gap: 15px; /* Uniform vertical gap between all major button elements */
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
     }
 
-    /* Target all action and utility buttons directly to ensure full width, centered stacking */
     .action-btn, .utility-btn {
-        width: 100%; /* Force full width on mobile to match the container's content area */
-        flex: none; /* Remove any flex-basis that might conflict with width: 100% */
-        margin: 0; /* Remove any individual margins, rely on parent gap */
+        width: 100%;
+        flex: none;
+        margin: 0;
         font-size: 1.2em;
         padding: 18px 10px;
-        min-width: unset; /* Remove min-width to allow full responsiveness */
-        max-width: unset; /* Remove max-width to allow full responsiveness */
+        min-width: unset;
+        max-width: unset;
     }
 
-    /* The secondary-actions-row needs to also stack its children */
     .secondary-actions-row {
         flex-direction: column;
-        width: 100%; /* Ensure this container takes full width when stacking */
-        gap: 15px; /* Uniform vertical gap between Extras and Undo */
-        margin-top: 0; /* Crucial: Remove this margin to let the .buttons gap handle spacing */
+        width: 100%;
+        gap: 15px;
+        margin-top: 0;
         margin-bottom: 0;
     }
 
-    /* Modal adjustments for smaller screens (unchanged) */
+    /* Theme switch wrapper on mobile - Ensure consistent spacing */
+    .theme-switch-wrapper {
+        margin-top: 20px; /* Consistent margin from buttons */
+    }
+
+    /* Modal adjustments for smaller screens */
     .runs-selection-modal,
     .extras-selection-modal {
         padding: 20px;
