@@ -7,8 +7,7 @@ const runsBtn = document.getElementById('runs-btn');
 const extrasBtn = document.getElementById('extras-btn');
 const undoBtn = document.getElementById('undo-btn');
 const ballDisplayContainer = document.querySelector('.ball-display');
-// Reference to the feedback display element
-const feedbackDisplay = document.getElementById('feedback-display');
+// REMOVED: const feedbackDisplay = document.getElementById('feedback-display');
 
 // Runs selection modal elements
 const runsSelectionModal = document.getElementById('runs-selection-modal');
@@ -39,8 +38,7 @@ let stateHistory = [];
 // Variables to hold timeout IDs for 'OVER' animation/sound and automatic reset
 let overAnimationTimeout;
 let autoResetTimeout;
-// Timeout for hiding feedback display
-let feedbackHideTimeout;
+// REMOVED: let feedbackHideTimeout;
 
 // Flag to ensure Tone.js audio context is started only once
 let audioInitialized = false;
@@ -142,7 +140,8 @@ function playSound(type) {
     }
 }
 
-// Function to show temporary feedback
+// REMOVED: Function to show temporary feedback
+/*
 function showFeedback(message, type) {
     clearTimeout(feedbackHideTimeout); // Clear any existing hide timeout
 
@@ -161,6 +160,7 @@ function showFeedback(message, type) {
         feedbackDisplay.classList.remove('active');
     }, 1500);
 }
+*/
 
 
 // --- Function to perform the automatic reset ---
@@ -259,7 +259,7 @@ dotBtn.addEventListener('click', async () => {
         updateDisplay();
         triggerHapticFeedback(50);
         playSound('click');
-        showFeedback('0 Runs', 'runs'); // CHANGED: "Dot Ball" to "0 Runs"
+        // REMOVED: showFeedback('0 Runs', 'runs');
     }
 });
 
@@ -290,7 +290,7 @@ runButtons.forEach(button => {
         
         triggerHapticFeedback(50);
         playSound('click');
-        showFeedback(`+${runsScored} runs`, 'runs');
+        // REMOVED: showFeedback(`+${runsScored} runs`, 'runs');
     });
 });
 
@@ -319,31 +319,31 @@ extraOptionButtons.forEach(button => {
 
         stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] });
 
-        let feedbackText = '';
-        let feedbackType = 'runs';
+        // REMOVED: let feedbackText = '';
+        // REMOVED: let feedbackType = 'runs';
 
         if (extraType === "Wicket") {
             if (currentBalls < MAX_BALLS_PER_OVER) {
                 currentBalls++;
             }
             overEvents.push('X');
-            feedbackText = 'WICKET!';
-            feedbackType = 'wicket';
+            // REMOVED: feedbackText = 'WICKET!';
+            // REMOVED: feedbackType = 'wicket';
         } else if (extraType === "Byes") {
             if (currentBalls < MAX_BALLS_PER_OVER) {
                 currentBalls++;
             }
             overEvents.push('BY');
-            feedbackText = 'Byes';
-            feedbackType = 'runs';
+            // REMOVED: feedbackText = 'Byes';
+            // REMOVED: feedbackType = 'runs';
         } else if (extraType === "Wide") {
             overEvents.push('WD');
-            feedbackText = 'Wide Ball';
-            feedbackType = 'runs';
+            // REMOVED: feedbackText = 'Wide Ball';
+            // REMOVED: feedbackType = 'runs';
         } else if (extraType === "No Ball") {
             overEvents.push('NB');
-            feedbackText = 'No Ball';
-            feedbackType = 'runs';
+            // REMOVED: feedbackText = 'No Ball';
+            // REMOVED: feedbackType = 'runs';
         }
         
         extrasSelectionModal.classList.remove('active');
@@ -352,7 +352,7 @@ extraOptionButtons.forEach(button => {
 
         triggerHapticFeedback(50);
         playSound('click');
-        showFeedback(feedbackText, feedbackType);
+        // REMOVED: showFeedback(feedbackText, feedbackType);
     });
 });
 
@@ -369,8 +369,8 @@ undoBtn.addEventListener('click', async () => {
     clearTimeout(autoResetTimeout);
     clearTimeout(overAnimationTimeout);
     ballDisplayContainer.classList.remove('over-complete');
-    clearTimeout(feedbackHideTimeout);
-    feedbackDisplay.classList.remove('active', 'runs', 'wicket');
+    // REMOVED: clearTimeout(feedbackHideTimeout);
+    // REMOVED: feedbackDisplay.classList.remove('active', 'runs', 'wicket');
 
     if (stateHistory.length > 0) {
         const prevState = stateHistory.pop();
