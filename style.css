@@ -2,10 +2,10 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* CHANGED: Align items to the start (top) */
+    align-items: flex-start; /* Aligns content to the top */
     min-height: 100vh;
     margin: 0;
-    background-color: #eef2f5; /* Fresh, very light blue-grey background */
+    background-color: #eef2f5;
     color: #333;
     text-align: center;
     padding: 10px; /* Adjusted padding to bring content up */
@@ -13,14 +13,14 @@ body {
 }
 
 .container {
-    background-color: #ffffff; /* Pure white container */
+    background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
     max-width: 400px;
     width: 100%;
     position: relative;
-    z-index: 1; /* Ensure container is below modal overlay */
+    z-index: 1;
     margin-top: 10px; /* Added a small top margin to lift it up slightly */
 }
 
@@ -33,8 +33,8 @@ h1 {
 .ball-display {
     font-size: 3.5em;
     font-weight: bold;
-    color: #2980b9; /* Deeper, vibrant blue for count text */
-    margin-bottom: 10px; /* Reduced margin to make space for history tracker */
+    color: #2980b9;
+    margin-bottom: 10px;
     padding: 15px 0;
     border: 2px solid #2980b9;
     border-radius: 8px;
@@ -46,19 +46,18 @@ h1 {
     font-size: 1.2em;
 }
 
-/* History Tracker Styling */
 .history-tracker {
     font-size: 1.1em;
     color: #555;
-    margin-bottom: 15px; /* Space between history and overs */
-    padding: 8px 10px; /* Some padding */
-    border: 1px solid #ddd; /* Light border */
+    margin-bottom: 15px;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #f9f9f9; /* Slightly off-white background */
-    width: calc(100% - 20px); /* Adjust for padding */
-    text-align: center; /* Center text */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Keep content on a single line */
+    background-color: #f9f9f9;
+    width: calc(100% - 20px);
+    text-align: center;
+    overflow-x: auto;
+    white-space: nowrap;
     font-weight: bold;
     min-height: 35px;
     display: flex;
@@ -66,7 +65,6 @@ h1 {
     justify-content: center;
 }
 
-/* Total Overs display styling */
 .overs-display {
     font-size: 1.2em;
     font-weight: bold;
@@ -77,12 +75,11 @@ h1 {
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px; /* CHANGED: Ensure consistent gap */
+    gap: 15px;
     justify-content: center;
     margin-top: auto;
 }
 
-/* Base styling for all interactable buttons */
 .action-btn, .utility-btn {
     padding: 20px 10px;
     font-size: 1.3em;
@@ -94,7 +91,6 @@ h1 {
     min-width: 140px;
 }
 
-/* Styling for disabled buttons */
 .action-btn:disabled, .utility-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -102,7 +98,6 @@ h1 {
     box-shadow: none;
 }
 
-/* Specific flex for Dot and Runs to make them two per row */
 #dot-btn, #runs-btn {
     flex: 1 1 calc(50% - 7.5px);
     background-color: #005662;
@@ -119,23 +114,20 @@ h1 {
     transform: translateY(0);
 }
 
-/* Wrapper to group Extras and Undo, and position them on their own row */
 .secondary-actions-row {
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 15px; /* CHANGED: Ensure consistent gap */
-    margin-top: 15px; /* Adjusted margin to match previous gap */
+    gap: 15px;
+    margin-top: 15px;
     margin-bottom: 0px;
 }
 
-/* Styling for Extras and Undo buttons (consistent size) */
 .secondary-actions-row .action-btn,
 .secondary-actions-row .utility-btn {
     flex: 1 1 calc(50% - 7.5px);
 }
 
-/* Specific background color for Extras */
 .extras-btn {
     background-color: #005662;
     color: white;
@@ -151,7 +143,6 @@ h1 {
     transform: translateY(0);
 }
 
-/* Specific background color for Undo */
 .utility-btn {
     background-color: #6c757d;
     color: white;
@@ -167,7 +158,6 @@ h1 {
     transform: translateY(0);
 }
 
-/* Styling for when the over is complete - NOW GREEN with white text and pulsating */
 .ball-display.over-complete {
     background-color: #27ae60;
     color: white;
@@ -175,7 +165,6 @@ h1 {
     animation: pulse 1s infinite alternate;
 }
 
-/* Keyframes for the pulse animation */
 @keyframes pulse {
     from {
         transform: scale(1);
@@ -185,7 +174,6 @@ h1 {
     }
 }
 
-/* MODAL STYLES (Applies to both Runs and Extras modals) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -207,7 +195,6 @@ h1 {
     visibility: visible;
 }
 
-/* General modal styling for runs and extras */
 .runs-selection-modal,
 .extras-selection-modal {
     background-color: #ffffff;
@@ -242,7 +229,6 @@ h1 {
     font-size: 1.6em;
 }
 
-/* Grid for Runs options */
 .run-options-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -250,10 +236,9 @@ h1 {
     margin-bottom: 25px;
 }
 
-/* Grid for Extras options */
 .extra-options-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns, will create 2x2 for 4 items */
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     margin-bottom: 25px;
 }
@@ -308,22 +293,29 @@ h1 {
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
+    /* Removed flex-basis on individual buttons, relying on their wrapping behavior */
     #dot-btn, #runs-btn,
     .secondary-actions-row .action-btn,
     .secondary-actions-row .utility-btn {
-        flex: 1 1 100%;
+        width: 100%; /* Make them take full width individually */
         font-size: 1.2em;
         padding: 18px 10px;
     }
-    .secondary-actions-row {
-        flex-direction: column;
-        gap: 15px; /* CHANGED: Added gap for consistent vertical spacing */
-        margin-top: 15px;
-        margin-bottom: 0px;
+    .buttons {
+        flex-direction: column; /* Force all main buttons to stack vertically */
+        gap: 15px; /* Maintain consistent vertical gap between ALL buttons in the .buttons container */
     }
+
+    .secondary-actions-row {
+        flex-direction: column; /* Ensure Extras and Undo also stack vertically within their row */
+        gap: 15px; /* Maintain consistent vertical gap within secondary actions */
+        margin-top: 15px; /* Ensure space between Runs and Extras/Undo group */
+    }
+
+    /* Reset any individual margins that might conflict with the flex gaps */
     .secondary-actions-row .action-btn,
     .secondary-actions-row .utility-btn {
-        margin-bottom: 0px; /* Removed individual button margin in row */
+        margin-bottom: 0;
     }
 
     .runs-selection-modal,
