@@ -205,7 +205,9 @@ function updateDisplay() {
     const ballsInCurrentOver = currentBalls % MAX_BALLS_PER_OVER;
     totalOversDisplay.textContent = `${fullOvers}.${ballsInCurrentOver}`;
 
+    // --- REVERTED: Removed trailing dot logic. Array.prototype.join() handles spacing correctly. ---
     historyTracker.textContent = overEvents.join(' . ');
+    // --- END REVERTED ---
 }
 
 // --- Function for Haptic Feedback (Vibration) ---
