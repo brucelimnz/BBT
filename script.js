@@ -205,9 +205,14 @@ function updateDisplay() {
     const ballsInCurrentOver = currentBalls % MAX_BALLS_PER_OVER;
     totalOversDisplay.textContent = `${fullOvers}.${ballsInCurrentOver}`;
 
-    // --- REVERTED: Removed trailing dot logic. Array.prototype.join() handles spacing correctly. ---
-    historyTracker.textContent = overEvents.join(' . ');
-    // --- END REVERTED ---
+    // --- UPDATED: Conditional trailing dot for history tracker ---
+    let historyText = overEvents.join(' . ');
+    // Add a trailing dot only if it's not the 6th ball (i.e., currentBalls is 1-5)
+    if (overEvents.length > 0 && currentBalls < MAX_BALLS_PER_OVER) {
+        historyText += ' .';
+    }
+    historyTracker.textContent = historyText;
+    // --- END UPDATED ---
 }
 
 // --- Function for Haptic Feedback (Vibration) ---
