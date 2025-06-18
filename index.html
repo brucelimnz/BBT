@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bruce's Ball Tracker</title>
+    <title>Ball Tracker</title>
     <link rel="stylesheet" href="./style.css">
     <!-- Tone.js library for sound effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Bruce's Ball Tracker</h1>
+        <!-- Removed: <h1>Bruce's Ball Tracker</h1> -->
         <div class="ball-display">
             <span id="current-balls">0</span>
         </div>
-        <!-- Total Overs Display -->
+        
+        <div class="history-tracker" id="history-tracker"></div>
+
         <div class="overs-display">
             Overs: <span id="total-overs">0</span>
         </div>
@@ -22,15 +24,40 @@
             <button id="dot-btn" class="action-btn">Dot</button>
             <button id="runs-btn" class="action-btn">Runs</button>
 
-            <!-- Wrapper for Extras and Undo buttons -->
             <div class="secondary-actions-row">
                 <button id="extras-btn" class="action-btn extras-btn">Extras</button>
                 <button id="undo-btn" class="utility-btn">Undo</button>
             </div>
             
-            <!-- Removed the "New Over" button and its row -->
-
         </div>
+    </div>
+
+    <div class="modal-overlay" id="runs-overlay"></div>
+
+    <div class="runs-selection-modal" id="runs-selection-modal">
+        <h2>Runs Scored?</h2>
+        <div class="run-options-grid">
+            <button class="run-option-btn">1</button>
+            <button class="run-option-btn">2</button>
+            <button class="run-option-btn">3</button>
+            <button class="run-option-btn">4</button>
+            <button class="run-option-btn">5</button>
+            <button class="run-option-btn">6</button>
+        </div>
+        <button class="modal-cancel-btn" id="cancel-run-selection-btn">Cancel</button>
+    </div>
+
+    <div class="modal-overlay" id="extras-overlay"></div>
+
+    <div class="extras-selection-modal" id="extras-selection-modal">
+        <h2>Extra Type?</h2>
+        <div class="extra-options-grid">
+            <button class="extra-option-btn" data-extra-type="Wide">Wide</button>
+            <button class="extra-option-btn" data-extra-type="No Ball">No Ball</button>
+            <button class="extra-option-btn" data-extra-type="Wicket">Wicket</button>
+            <button class="extra-option-btn" data-extra-type="Byes">Byes</button>
+        </div>
+        <button class="modal-cancel-btn" id="cancel-extra-selection-btn">Cancel</button>
     </div>
 
     <script src="script.js"></script>

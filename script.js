@@ -1,44 +1,64 @@
 // Get references to all the necessary HTML elements using their IDs
 const currentBallsDisplay = document.getElementById('current-balls');
 const totalOversDisplay = document.getElementById('total-overs');
+const historyTracker = document.getElementById('history-tracker');
 const dotBtn = document.getElementById('dot-btn');
 const runsBtn = document.getElementById('runs-btn');
 const extrasBtn = document.getElementById('extras-btn');
 const undoBtn = document.getElementById('undo-btn');
 const ballDisplayContainer = document.querySelector('.ball-display');
 
+// Runs selection modal elements
+const runsSelectionModal = document.getElementById('runs-selection-modal');
+const runsOverlay = document.getElementById('runs-overlay');
+const runButtons = document.querySelectorAll('.run-option-btn');
+const cancelRunSelectionBtn = document.getElementById('cancel-run-selection-btn');
+
+// Extras selection modal elements
+const extrasSelectionModal = document.getElementById('extras-selection-modal');
+const extrasOverlay = document.getElementById('extras-overlay');
+const extraOptionButtons = document.querySelectorAll('.extra-option-btn');
+const cancelExtraSelectionBtn = document.getElementById('cancel-extra-selection-btn');
+
+
 // Initialize counts
 let currentBalls = 0;
 let totalOvers = 0;
 const MAX_BALLS_PER_OVER = 6;
 
-// History to store ball counts for undo functionality
-let ballHistory = [];
+// History for the current over's events (e.g., '0', '4', 'Wd', 'B')
+let overEvents = [];
+
+// History to store FULL STATE for undo functionality
+// Stores objects { balls: number, overEvents: string[] }
+let stateHistory = [];
+
 
 // Variables to hold timeout IDs for 'OVER' animation/sound and automatic reset
 let overAnimationTimeout;
 let autoResetTimeout;
 
+// NEW: Flag to ensure Tone.js audio context is started only once
+let audioInitialized = false;
+
 
 // --- Tone.js Sound Setup ---
-// Synth for general button clicks (short, subtle, wooden tap sound)
+// General input click sound (wooden click)
 const clickSynth = new Tone.MembraneSynth({
-    pitchDecay: 0.05,
-    octaves: 0.5,
+    pitchDecay: 0.03,
+    octaves: 2,
     oscillator: {
         type: 'sine'
     },
     envelope: {
         attack: 0.001,
-        decay: 0.2,
+        decay: 0.4,
         sustain: 0,
-        release: 0.05
+        release: 0.1
     }
 }).toDestination();
-
 clickSynth.chain(new Tone.Filter(1000, "lowpass").toDestination());
 
-// Synth for "OVER" notification (distinct, "bing" sound)
 const overSynth = new Tone.Synth({
     oscillator: {
         type: 'triangle'
@@ -51,41 +71,91 @@ const overSynth = new Tone.Synth({
     }
 }).toDestination();
 
-// Removed: resetSynth as it's no longer used
+const resetSynth = new Tone.Synth({
+    oscillator: {
+        type: 'sine'
+    },
+    envelope: {
+        attack: 0.01,
+        decay: 0.2,
+        sustain: 0,
+        release: 0.2
+    }
+}).toDestination();
+
+// NEW: Undo button "pop" sound - distinct and higher pitched
+const undoPopSynth = new Tone.MembraneSynth({
+    pitchDecay: 0.01,   // Very quick pitch decay for sharp pop
+    octaves: 1.5,       // Small pitch drop for definition
+    oscillator: {
+        type: 'sine'    // Sine wave for a cleaner, less harsh pop
+    },
+    envelope: {
+        attack: 0.002,  // Fast attack
+        decay: 0.15,    // Short, clear decay
+        sustain: 0,
+        release: 0.05
+    },
+    volume: -5          // Adjusted volume for balance
+}).toDestination();
+undoPopSynth.chain(new Tone.Filter(2000, "highpass").toDestination());
+
+
+// --- Function to Initialize Audio Context ---
+// This will be called on ANY user interaction that plays sound,
+// ensuring Tone.js starts robustly.
+async function initializeAudioContext() {
+    if (!audioInitialized) {
+        try {
+            await Tone.start();
+            console.log('Audio context started successfully!');
+            audioInitialized = true;
+        } catch (error) {
+            console.error('Failed to start audio context:', error);
+            // Optionally, provide user feedback that audio couldn't start
+        }
+    }
+}
 
 
 // --- Function to Play Sounds ---
 function playSound(type) {
-    if (Tone.context.state !== 'running') {
-        Tone.start();
+    if (!audioInitialized) {
+        console.warn("Audio not initialized. Skipping sound playback.");
+        return;
     }
 
     switch (type) {
         case 'click':
-            clickSynth.triggerAttackRelease("C3", "16n");
+            clickSynth.triggerAttackRelease("D3", "16n"); // The 'wooden' pitch for inputs
             break;
         case 'over':
             overSynth.triggerAttackRelease("C5", "8n");
             break;
-        // Removed: 'reset' case
+        case 'reset':
+            resetSynth.triggerAttackRelease("C6", "8n");
+            break;
+        case 'undoPop': // Case for the distinct undo pop sound
+            undoPopSynth.triggerAttackRelease("C5", "32n"); // Higher pitch for undo pop
+            break;
     }
 }
 
 
 // --- Function to perform the automatic reset ---
 function performAutoReset() {
-    // Only increment total overs if the current over was completed (6 balls were bowled)
     if (currentBalls === MAX_BALLS_PER_OVER) {
         totalOvers++;
     }
     currentBalls = 0;
-    ballHistory = []; // Clear the history for the new over
-    updateDisplay(); // Update the display to 0/6
-    // Removed: playSound('reset');
+    overEvents = []; // Clear over events for new over
+    stateHistory = []; // Clear state history for new over
+    updateDisplay();
+    playSound('reset');
 }
 
 
-// --- Function to Update the Display ---
+// --- Function to Update the Display and Button States ---
 function updateDisplay() {
     // Clear any pending 'OVER' animation/sound timeout and automatic reset timeout
     clearTimeout(overAnimationTimeout);
@@ -93,46 +163,56 @@ function updateDisplay() {
 
     // Update Current Balls display and handle "OVER" state
     if (currentBalls === MAX_BALLS_PER_OVER) {
-        currentBallsDisplay.textContent = 'OVER'; // Immediately change text
+        const lastSixBalls = overEvents.slice(-MAX_BALLS_PER_OVER);
+        const isMaiden = lastSixBalls.every(event => event === '0');
 
-        // Disable relevant action buttons immediately
-        dotBtn.disabled = true;
-        runsBtn.disabled = true;
-        extrasBtn.disabled = true;
-        undoBtn.disabled = true;
+        // Display "MAIDEN" immediately if applicable
+        if (isMaiden) {
+            currentBallsDisplay.textContent = 'MAIDEN';
+        } else {
+            currentBallsDisplay.textContent = 'OVER';
+        }
 
         // Set a timeout for the visual and auditory/haptic feedback (1 second delay)
         overAnimationTimeout = setTimeout(() => {
-            ballDisplayContainer.classList.add('over-complete'); // Add class for styling (green background, pulsing)
-            triggerHapticFeedback(200); // Longer vibration
-            playSound('over'); // Play over sound (now a 'bing')
+            ballDisplayContainer.classList.add('over-complete');
+            currentBallsDisplay.textContent = 'OVER'; // Force to "OVER" during flash
+            triggerHapticFeedback(200);
+            playSound('over');
         }, 1000); // 1 second delay
 
         // Set a timeout for the automatic reset (3 seconds after over is reached)
         autoResetTimeout = setTimeout(() => {
             performAutoReset();
         }, 3000); // 3 second delay for automatic reset
+
+        // Disable all main action buttons when over is complete
+        dotBtn.disabled = true;
+        runsBtn.disabled = true;
+        extrasBtn.disabled = true;
     } else {
         // Ensure 'OVER' visual/audio is cancelled if state changes before timeout (e.g., via Undo)
         ballDisplayContainer.classList.remove('over-complete');
         
-        currentBallsDisplay.textContent = currentBalls + ' / ' + MAX_BALLS_PER_OVER; // Show current count
+        currentBallsDisplay.textContent = currentBalls + ' / ' + MAX_BALLS_PER_OVER;
 
-        // Enable action buttons if over is not complete
+        // Enable Dot, Runs, Extras
         dotBtn.disabled = false;
         runsBtn.disabled = false;
         extrasBtn.disabled = false;
+    }
 
-        // --- ONLY control Undo button's state based on history and currentBalls when NOT 'OVER' ---
-        if (ballHistory.length === 0 && currentBalls === 0) {
-            undoBtn.disabled = true;
-        } else {
-            undoBtn.disabled = false;
-        }
+    // --- Control Undo button's state globally, NOT dependent on OVER state ---
+    if (stateHistory.length === 0 && currentBalls === 0) {
+        undoBtn.disabled = true;
+    } else {
+        undoBtn.disabled = false;
     }
 
     // Update Total Overs display
     totalOversDisplay.textContent = totalOvers;
+
+    historyTracker.textContent = overEvents.join(' / ');
 }
 
 // --- Function for Haptic Feedback (Vibration) ---
@@ -142,56 +222,135 @@ function triggerHapticFeedback(duration = 50) {
     }
 }
 
+// --- Function to temporarily disable all main buttons (e.g., when a modal is open) ---
+function disableMainButtons() {
+    dotBtn.disabled = true;
+    runsBtn.disabled = true;
+    extrasBtn.disabled = true;
+    undoBtn.disabled = true;
+}
+
+// --- Function to re-enable main buttons (e.g., when a modal closes) ---
+function reEnableMainButtons() {
+    updateDisplay();
+}
+
+
 // --- Event Listeners for Buttons ---
-
-// 1. "Dot" Button: Increments the legal ball count
-dotBtn.addEventListener('click', () => {
+// All button listeners now call initializeAudioContext first
+dotBtn.addEventListener('click', async () => {
+    await initializeAudioContext(); // Ensure audio context is active
     if (!dotBtn.disabled && currentBalls < MAX_BALLS_PER_OVER) {
-        ballHistory.push(currentBalls);
+        stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] }); 
         currentBalls++;
+        overEvents.push('0');
         updateDisplay();
         triggerHapticFeedback(50);
-        playSound('click');
+        playSound('click'); // Plays 'wooden' click
     }
 });
 
-// 2. "Runs" Button: Increments the legal ball count
-runsBtn.addEventListener('click', () => {
+runsBtn.addEventListener('click', async () => {
+    await initializeAudioContext(); // Ensure audio context is active
     if (!runsBtn.disabled && currentBalls < MAX_BALLS_PER_OVER) {
-        ballHistory.push(currentBalls);
-        currentBalls++;
-        updateDisplay();
-        triggerHapticFeedback(50);
-        playSound('click');
+        runsSelectionModal.classList.add('active');
+        runsOverlay.classList.add('active');
+        disableMainButtons();
     }
 });
 
-// 3. "Extras" Button: Records an extra, but does NOT increment legal balls
-extrasBtn.addEventListener('click', () => {
+runButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+        await initializeAudioContext(); // Ensure audio context is active
+        const runsScored = parseInt(button.textContent);
+        console.log(`User selected ${runsScored} run(s)`);
+
+        if (currentBalls < MAX_BALLS_PER_OVER) {
+            stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] }); 
+            currentBalls++;
+            overEvents.push(runsScored.toString());
+        }
+        
+        runsSelectionModal.classList.remove('active');
+        runsOverlay.classList.remove('active');
+        reEnableMainButtons();
+        
+        triggerHapticFeedback(50);
+        playSound('click'); // Plays 'wooden' click
+    });
+});
+
+cancelRunSelectionBtn.addEventListener('click', async () => {
+    await initializeAudioContext(); // Ensure audio context is active
+    runsSelectionModal.classList.remove('active');
+    runsOverlay.classList.remove('active');
+    reEnableMainButtons();
+});
+
+
+extrasBtn.addEventListener('click', async () => {
+    await initializeAudioContext(); // Ensure audio context is active
     if (!extrasBtn.disabled) {
-        console.log("Extras bowled!");
-        triggerHapticFeedback(50);
-        playSound('click');
+        extrasSelectionModal.classList.add('active');
+        extrasOverlay.classList.add('active');
+        disableMainButtons();
     }
 });
 
-// 4. "Undo" Button: Reverts the last ball count increment
-undoBtn.addEventListener('click', () => {
+extraOptionButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+        await initializeAudioContext(); // Ensure audio context is active
+        const extraType = button.dataset.extraType;
+        console.log(`User selected Extra: ${extraType}`);
+
+        stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] });
+
+        if (extraType === "Wicket" || extraType === "Byes") {
+            if (currentBalls < MAX_BALLS_PER_OVER) {
+                currentBalls++;
+            }
+        }
+        if (extraType === "Wide") overEvents.push('Wd');
+        else if (extraType === "No Ball") overEvents.push('NB');
+        else if (extraType === "Wicket") overEvents.push('X');
+        else if (extraType === "Byes") overEvents.push('B');
+        
+        extrasSelectionModal.classList.remove('active');
+        extrasOverlay.classList.remove('active');
+        reEnableMainButtons();
+
+        triggerHapticFeedback(50);
+        playSound('click'); // Plays 'wooden' click
+    });
+});
+
+cancelExtraSelectionBtn.addEventListener('click', async () => {
+    await initializeAudioContext(); // Ensure audio context is active
+    extrasSelectionModal.classList.remove('active');
+    extrasOverlay.classList.remove('active');
+    reEnableMainButtons();
+});
+
+
+undoBtn.addEventListener('click', async () => {
+    await initializeAudioContext(); // Ensure audio context is active
     clearTimeout(autoResetTimeout);
     clearTimeout(overAnimationTimeout);
     ballDisplayContainer.classList.remove('over-complete');
 
-    if (ballHistory.length > 0) {
-        currentBalls = ballHistory.pop();
-        updateDisplay();
+    if (stateHistory.length > 0) {
+        const prevState = stateHistory.pop();
+        currentBalls = prevState.balls;
+        overEvents = prevState.overEvents;
+        reEnableMainButtons();
         triggerHapticFeedback(50);
-        playSound('click');
+        playSound('undoPop'); // Plays the distinct high-pitched pop sound
     } else if (currentBalls > 0) {
         currentBalls = 0;
-        ballHistory = [];
-        updateDisplay();
+        overEvents = [];
+        reEnableMainButtons();
         triggerHapticFeedback(50);
-        playSound('click');
+        playSound('undoPop'); // Plays the distinct high-pitched pop sound
     }
 });
 

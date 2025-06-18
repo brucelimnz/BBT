@@ -19,10 +19,12 @@ body {
     padding: 30px;
     max-width: 400px;
     width: 100%;
+    position: relative;
+    z-index: 1; /* Ensure container is below modal overlay */
 }
 
 h1 {
-    color: #2c3e50; /* Dark blue-grey for title */
+    color: #2c3e50;
     margin-bottom: 25px;
     font-size: 1.8em;
 }
@@ -31,11 +33,11 @@ h1 {
     font-size: 3.5em;
     font-weight: bold;
     color: #2980b9; /* Deeper, vibrant blue for count text */
-    margin-bottom: 15px; /* Reduced margin to make space for overs display */
+    margin-bottom: 10px; /* Reduced margin to make space for history tracker */
     padding: 15px 0;
-    border: 2px solid #2980b9; /* Border matching new count color */
+    border: 2px solid #2980b9;
     border-radius: 8px;
-    background-color: #dbe9f5; /* Muted light blue background for display */
+    background-color: #dbe9f5;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, animation 0.8s ease-in-out;
 }
 
@@ -43,12 +45,32 @@ h1 {
     font-size: 1.2em;
 }
 
+/* History Tracker Styling */
+.history-tracker {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 15px; /* Space between history and overs */
+    padding: 8px 10px; /* Some padding */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Slightly off-white background */
+    width: calc(100% - 20px); /* Adjust for padding */
+    text-align: center; /* Center text */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Keep content on a single line */
+    font-weight: bold;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Total Overs display styling */
 .overs-display {
-    font-size: 1.5em;
+    font-size: 1.2em; /* This was the change made for "Decrease the font size" */
     font-weight: bold;
-    color: #667a89; /* Slightly muted dark grey for overs count */
-    margin-bottom: 40px;
+    color: #667a89;
+    margin-bottom: 20px; /* This was the change made for "Close up the space" */
 }
 
 .buttons {
@@ -56,11 +78,11 @@ h1 {
     flex-wrap: wrap;
     gap: 15px;
     justify-content: center;
-    margin-top: auto; /* Push buttons to the bottom if container has min-height */
+    margin-top: auto;
 }
 
 /* Base styling for all interactable buttons */
-.action-btn, .utility-btn { /* Removed .reset-btn here */
+.action-btn, .utility-btn {
     padding: 20px 10px;
     font-size: 1.3em;
     font-weight: bold;
@@ -82,17 +104,17 @@ h1 {
 /* Specific flex for Dot and Runs to make them two per row */
 #dot-btn, #runs-btn {
     flex: 1 1 calc(50% - 7.5px);
-    background-color: #005662; /* Dark Teal - Matches the BALL field */
+    background-color: #005662;
     color: white;
 }
 
 #dot-btn:hover:not(:disabled), #runs-btn:hover:not(:disabled) {
-    background-color: #007983; /* Lighter Teal on hover */
+    background-color: #007983;
     transform: translateY(-2px);
 }
 
 #dot-btn:active:not(:disabled), #runs-btn:active:not(:disabled) {
-    background-color: #00404a; /* Darker Teal on active */
+    background-color: #00404a;
     transform: translateY(0);
 }
 
@@ -114,7 +136,7 @@ h1 {
 
 /* Specific background color for Extras */
 .extras-btn {
-    background-color: #005662; /* Dark Teal - Matches the BALL field */
+    background-color: #005662;
     color: white;
 }
 
@@ -130,7 +152,7 @@ h1 {
 
 /* Specific background color for Undo */
 .utility-btn {
-    background-color: #6c757d; /* Grey for utility action (remains unchanged) */
+    background-color: #6c757d;
     color: white;
 }
 
@@ -144,14 +166,12 @@ h1 {
     transform: translateY(0);
 }
 
-/* Removed styling for #new-over-btn and .reset-button-row */
-
 /* Styling for when the over is complete - NOW GREEN with white text and pulsating */
 .ball-display.over-complete {
-    background-color: #27ae60; /* Green background for over complete */
-    color: white; /* White text */
-    border-color: #229954; /* Darker green border */
-    animation: pulse 1s infinite alternate; /* Keep the pulsating animation */
+    background-color: #27ae60;
+    color: white;
+    border-color: #229954;
+    animation: pulse 1s infinite alternate;
 }
 
 /* Keyframes for the pulse animation */
@@ -164,16 +184,136 @@ h1 {
     }
 }
 
+/* MODAL STYLES (Applies to both Runs and Extras modals) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* General modal styling for runs and extras */
+.runs-selection-modal,
+.extras-selection-modal {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 90%;
+    max-width: 350px;
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1001;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.runs-selection-modal.active,
+.extras-selection-modal.active {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    visibility: visible;
+}
+
+.runs-selection-modal h2,
+.extras-selection-modal h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    font-size: 1.6em;
+}
+
+/* Grid for Runs options */
+.run-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+/* Grid for Extras options */
+.extra-options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns, will create 2x2 for 4 items */
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.run-option-btn,
+.extra-option-btn {
+    padding: 18px 10px;
+    font-size: 1.4em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background-color: #e0e0e0;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.run-option-btn:hover,
+.extra-option-btn:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-2px);
+}
+
+.run-option-btn:active,
+.extra-option-btn:active {
+    background-color: #c0c0c0;
+    transform: translateY(0);
+}
+
+.modal-cancel-btn {
+    padding: 15px 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-cancel-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.modal-cancel-btn:active {
+    background-color: #bd2130;
+    transform: translateY(0);
+}
+
+
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
     #dot-btn, #runs-btn,
     .secondary-actions-row .action-btn,
-    .secondary-actions-row .utility-btn { /* Removed #new-over-btn */
-        flex: 1 1 100%; /* Stack all buttons on very small screens */
+    .secondary-actions-row .utility-btn {
+        flex: 1 1 100%;
         font-size: 1.2em;
         padding: 18px 10px;
     }
-    /* Adjustments for nested flex container on small screens */
     .secondary-actions-row {
         flex-direction: column;
         gap: 0;
@@ -183,5 +323,27 @@ h1 {
     .secondary-actions-row .utility-btn {
         margin-bottom: 15px;
     }
-    /* #new-over-btn margin removed */
+
+    .runs-selection-modal,
+    .extras-selection-modal {
+        padding: 20px;
+    }
+    .runs-selection-modal h2,
+    .extras-selection-modal h2 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+    .run-options-grid,
+    .extra-options-grid {
+        gap: 10px;
+    }
+    .run-option-btn,
+    .extra-option-btn {
+        padding: 15px 8px;
+        font-size: 1.2em;
+    }
+    .modal-cancel-btn {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
 }
