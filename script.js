@@ -198,7 +198,8 @@ function updateDisplay() {
     }
 
     totalOversDisplay.textContent = totalOvers;
-    historyTracker.textContent = overEvents.join(' / ');
+    // CHANGED: Use ' . ' as separator for history tracker
+    historyTracker.textContent = overEvents.join(' . ');
 }
 
 // --- Function for Haptic Feedback (Vibration) ---
