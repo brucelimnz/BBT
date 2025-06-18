@@ -2,13 +2,13 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* CHANGED: Align items to the start (top) */
     min-height: 100vh;
     margin: 0;
     background-color: #eef2f5; /* Fresh, very light blue-grey background */
     color: #333;
     text-align: center;
-    padding: 20px;
+    padding: 10px; /* Adjusted padding to bring content up */
     box-sizing: border-box;
 }
 
@@ -21,6 +21,7 @@ body {
     width: 100%;
     position: relative;
     z-index: 1; /* Ensure container is below modal overlay */
+    margin-top: 10px; /* Added a small top margin to lift it up slightly */
 }
 
 h1 {
@@ -67,16 +68,16 @@ h1 {
 
 /* Total Overs display styling */
 .overs-display {
-    font-size: 1.2em; /* This was the change made for "Decrease the font size" */
+    font-size: 1.2em;
     font-weight: bold;
     color: #667a89;
-    margin-bottom: 20px; /* This was the change made for "Close up the space" */
+    margin-bottom: 20px;
 }
 
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 15px; /* CHANGED: Ensure consistent gap */
     justify-content: center;
     margin-top: auto;
 }
@@ -123,8 +124,8 @@ h1 {
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-top: 0px;
+    gap: 15px; /* CHANGED: Ensure consistent gap */
+    margin-top: 15px; /* Adjusted margin to match previous gap */
     margin-bottom: 0px;
 }
 
@@ -316,12 +317,13 @@ h1 {
     }
     .secondary-actions-row {
         flex-direction: column;
-        gap: 0;
+        gap: 15px; /* CHANGED: Added gap for consistent vertical spacing */
         margin-top: 15px;
+        margin-bottom: 0px;
     }
     .secondary-actions-row .action-btn,
     .secondary-actions-row .utility-btn {
-        margin-bottom: 15px;
+        margin-bottom: 0px; /* Removed individual button margin in row */
     }
 
     .runs-selection-modal,

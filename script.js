@@ -38,8 +38,8 @@ let stateHistory = [];
 let overAnimationTimeout;
 let autoResetTimeout;
 
-// NEW: Flag to ensure Tone.js audio context is started only once
-let audioInitialized = false;
+// Flag to ensure Tone.js audio context is started only once
+let audioInitialized = false; // Kept for robust audio initialization
 
 
 // --- Tone.js Sound Setup ---
@@ -83,27 +83,25 @@ const resetSynth = new Tone.Synth({
     }
 }).toDestination();
 
-// NEW: Undo button "pop" sound - distinct and higher pitched
+// Undo button "pop" sound - distinct and higher pitched
 const undoPopSynth = new Tone.MembraneSynth({
-    pitchDecay: 0.01,   // Very quick pitch decay for sharp pop
-    octaves: 1.5,       // Small pitch drop for definition
+    pitchDecay: 0.01,
+    octaves: 1.5,
     oscillator: {
-        type: 'sine'    // Sine wave for a cleaner, less harsh pop
+        type: 'sine'
     },
     envelope: {
-        attack: 0.002,  // Fast attack
-        decay: 0.15,    // Short, clear decay
+        attack: 0.002,
+        decay: 0.15,
         sustain: 0,
         release: 0.05
     },
-    volume: -5          // Adjusted volume for balance
+    volume: -5
 }).toDestination();
 undoPopSynth.chain(new Tone.Filter(2000, "highpass").toDestination());
 
 
 // --- Function to Initialize Audio Context ---
-// This will be called on ANY user interaction that plays sound,
-// ensuring Tone.js starts robustly.
 async function initializeAudioContext() {
     if (!audioInitialized) {
         try {
@@ -112,7 +110,6 @@ async function initializeAudioContext() {
             audioInitialized = true;
         } catch (error) {
             console.error('Failed to start audio context:', error);
-            // Optionally, provide user feedback that audio couldn't start
         }
     }
 }
@@ -127,7 +124,7 @@ function playSound(type) {
 
     switch (type) {
         case 'click':
-            clickSynth.triggerAttackRelease("D3", "16n"); // The 'wooden' pitch for inputs
+            clickSynth.triggerAttackRelease("D3", "16n");
             break;
         case 'over':
             overSynth.triggerAttackRelease("C5", "8n");
@@ -135,8 +132,8 @@ function playSound(type) {
         case 'reset':
             resetSynth.triggerAttackRelease("C6", "8n");
             break;
-        case 'undoPop': // Case for the distinct undo pop sound
-            undoPopSynth.triggerAttackRelease("C5", "32n"); // Higher pitch for undo pop
+        case 'undoPop':
+            undoPopSynth.triggerAttackRelease("C5", "32n");
             break;
     }
 }
@@ -148,8 +145,8 @@ function performAutoReset() {
         totalOvers++;
     }
     currentBalls = 0;
-    overEvents = []; // Clear over events for new over
-    stateHistory = []; // Clear state history for new over
+    overEvents = [];
+    stateHistory = [];
     updateDisplay();
     playSound('reset');
 }
@@ -157,61 +154,50 @@ function performAutoReset() {
 
 // --- Function to Update the Display and Button States ---
 function updateDisplay() {
-    // Clear any pending 'OVER' animation/sound timeout and automatic reset timeout
     clearTimeout(overAnimationTimeout);
     clearTimeout(autoResetTimeout);
 
-    // Update Current Balls display and handle "OVER" state
     if (currentBalls === MAX_BALLS_PER_OVER) {
         const lastSixBalls = overEvents.slice(-MAX_BALLS_PER_OVER);
         const isMaiden = lastSixBalls.every(event => event === '0');
 
-        // Display "MAIDEN" immediately if applicable
         if (isMaiden) {
             currentBallsDisplay.textContent = 'MAIDEN';
         } else {
             currentBallsDisplay.textContent = 'OVER';
         }
 
-        // Set a timeout for the visual and auditory/haptic feedback (1 second delay)
         overAnimationTimeout = setTimeout(() => {
             ballDisplayContainer.classList.add('over-complete');
-            currentBallsDisplay.textContent = 'OVER'; // Force to "OVER" during flash
+            currentBallsDisplay.textContent = 'OVER'; 
             triggerHapticFeedback(200);
             playSound('over');
-        }, 1000); // 1 second delay
+        }, 1000);
 
-        // Set a timeout for the automatic reset (3 seconds after over is reached)
         autoResetTimeout = setTimeout(() => {
             performAutoReset();
-        }, 3000); // 3 second delay for automatic reset
+        }, 3000);
 
-        // Disable all main action buttons when over is complete
         dotBtn.disabled = true;
         runsBtn.disabled = true;
         extrasBtn.disabled = true;
     } else {
-        // Ensure 'OVER' visual/audio is cancelled if state changes before timeout (e.g., via Undo)
         ballDisplayContainer.classList.remove('over-complete');
         
         currentBallsDisplay.textContent = currentBalls + ' / ' + MAX_BALLS_PER_OVER;
 
-        // Enable Dot, Runs, Extras
         dotBtn.disabled = false;
         runsBtn.disabled = false;
         extrasBtn.disabled = false;
     }
 
-    // --- Control Undo button's state globally, NOT dependent on OVER state ---
     if (stateHistory.length === 0 && currentBalls === 0) {
         undoBtn.disabled = true;
     } else {
         undoBtn.disabled = false;
     }
 
-    // Update Total Overs display
     totalOversDisplay.textContent = totalOvers;
-
     historyTracker.textContent = overEvents.join(' / ');
 }
 
@@ -237,21 +223,20 @@ function reEnableMainButtons() {
 
 
 // --- Event Listeners for Buttons ---
-// All button listeners now call initializeAudioContext first
 dotBtn.addEventListener('click', async () => {
-    await initializeAudioContext(); // Ensure audio context is active
+    await initializeAudioContext();
     if (!dotBtn.disabled && currentBalls < MAX_BALLS_PER_OVER) {
         stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] }); 
         currentBalls++;
         overEvents.push('0');
         updateDisplay();
         triggerHapticFeedback(50);
-        playSound('click'); // Plays 'wooden' click
+        playSound('click');
     }
 });
 
 runsBtn.addEventListener('click', async () => {
-    await initializeAudioContext(); // Ensure audio context is active
+    await initializeAudioContext();
     if (!runsBtn.disabled && currentBalls < MAX_BALLS_PER_OVER) {
         runsSelectionModal.classList.add('active');
         runsOverlay.classList.add('active');
@@ -261,7 +246,7 @@ runsBtn.addEventListener('click', async () => {
 
 runButtons.forEach(button => {
     button.addEventListener('click', async () => {
-        await initializeAudioContext(); // Ensure audio context is active
+        await initializeAudioContext();
         const runsScored = parseInt(button.textContent);
         console.log(`User selected ${runsScored} run(s)`);
 
@@ -276,12 +261,12 @@ runButtons.forEach(button => {
         reEnableMainButtons();
         
         triggerHapticFeedback(50);
-        playSound('click'); // Plays 'wooden' click
+        playSound('click');
     });
 });
 
 cancelRunSelectionBtn.addEventListener('click', async () => {
-    await initializeAudioContext(); // Ensure audio context is active
+    await initializeAudioContext();
     runsSelectionModal.classList.remove('active');
     runsOverlay.classList.remove('active');
     reEnableMainButtons();
@@ -289,7 +274,7 @@ cancelRunSelectionBtn.addEventListener('click', async () => {
 
 
 extrasBtn.addEventListener('click', async () => {
-    await initializeAudioContext(); // Ensure audio context is active
+    await initializeAudioContext();
     if (!extrasBtn.disabled) {
         extrasSelectionModal.classList.add('active');
         extrasOverlay.classList.add('active');
@@ -299,33 +284,29 @@ extrasBtn.addEventListener('click', async () => {
 
 extraOptionButtons.forEach(button => {
     button.addEventListener('click', async () => {
-        await initializeAudioContext(); // Ensure audio context is active
+        await initializeAudioContext();
         const extraType = button.dataset.extraType;
         console.log(`User selected Extra: ${extraType}`);
 
         stateHistory.push({ balls: currentBalls, overEvents: [...overEvents] });
 
-        if (extraType === "Wicket" || extraType === "Byes") {
-            if (currentBalls < MAX_BALLS_PER_OVER) {
-                currentBalls++;
-            }
-        }
-        if (extraType === "Wide") overEvents.push('Wd');
+        // Changed 'Wd' to 'WD' for Wide and 'B' to 'BY' for Byes
+        if (extraType === "Wide") overEvents.push('WD'); // CHANGED
         else if (extraType === "No Ball") overEvents.push('NB');
         else if (extraType === "Wicket") overEvents.push('X');
-        else if (extraType === "Byes") overEvents.push('B');
+        else if (extraType === "Byes") overEvents.push('BY'); // CHANGED
         
         extrasSelectionModal.classList.remove('active');
         extrasOverlay.classList.remove('active');
         reEnableMainButtons();
 
         triggerHapticFeedback(50);
-        playSound('click'); // Plays 'wooden' click
+        playSound('click');
     });
 });
 
 cancelExtraSelectionBtn.addEventListener('click', async () => {
-    await initializeAudioContext(); // Ensure audio context is active
+    await initializeAudioContext();
     extrasSelectionModal.classList.remove('active');
     extrasOverlay.classList.remove('active');
     reEnableMainButtons();
@@ -333,7 +314,7 @@ cancelExtraSelectionBtn.addEventListener('click', async () => {
 
 
 undoBtn.addEventListener('click', async () => {
-    await initializeAudioContext(); // Ensure audio context is active
+    await initializeAudioContext();
     clearTimeout(autoResetTimeout);
     clearTimeout(overAnimationTimeout);
     ballDisplayContainer.classList.remove('over-complete');
@@ -344,13 +325,13 @@ undoBtn.addEventListener('click', async () => {
         overEvents = prevState.overEvents;
         reEnableMainButtons();
         triggerHapticFeedback(50);
-        playSound('undoPop'); // Plays the distinct high-pitched pop sound
+        playSound('undoPop');
     } else if (currentBalls > 0) {
         currentBalls = 0;
         overEvents = [];
         reEnableMainButtons();
         triggerHapticFeedback(50);
-        playSound('undoPop'); // Plays the distinct high-pitched pop sound
+        playSound('undoPop');
     }
 });
 
