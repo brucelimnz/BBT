@@ -23,7 +23,7 @@ const cancelExtraSelectionBtn = document.getElementById('cancel-extra-selection-
 
 // Initialize counts
 let currentBalls = 0;
-let totalOvers = 0;
+let totalOvers = 0; // Represents full overs
 const MAX_BALLS_PER_OVER = 6;
 
 // History for the current over's events (e.g., '0', '4', 'Wd', 'B')
@@ -197,8 +197,12 @@ function updateDisplay() {
         undoBtn.disabled = false;
     }
 
-    totalOversDisplay.textContent = totalOvers;
-    // CHANGED: Use ' . ' as separator for history tracker
+    // --- CHANGED: Display overs in "fullOvers.currentBalls" format ---
+    const fullOvers = Math.floor(totalOvers);
+    const ballsInCurrentOver = currentBalls % MAX_BALLS_PER_OVER;
+    totalOversDisplay.textContent = `${fullOvers}.${ballsInCurrentOver}`;
+    // --- END CHANGED ---
+
     historyTracker.textContent = overEvents.join(' . ');
 }
 
